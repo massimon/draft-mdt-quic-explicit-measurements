@@ -279,7 +279,7 @@ that occurs on the mirror path.
 
 Observer loss affects upstream loss rate measurement, since it causes the
 observer to account for fewer packets in a block of identical Q bit values (see
-{{upstreamloss)}).  The end-to-end loss rate measurement, however, is unaffected
+{{upstreamloss}}).  The end-to-end loss rate measurement, however, is unaffected
 by the observer loss, since it is a measurement of the fraction of packets with
 the set L bit value, and the observer loss would affect all packets equally (see
 {{endtoendloss}}).
