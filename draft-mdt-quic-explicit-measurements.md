@@ -38,13 +38,12 @@ author:
     email: ilubashe@akamai.com
 
 normative:
-  QUIC-TRANSPORT: I-D.ietf-quic-transport
-  TRANSPORT-ENCRYPT: I-D.ietf-tsvwg-transport-encrypt
-  QUIC-TLS: I-D.ietf-quic-tls
+  QUIC-TRANSPORT: RFC9000
+  QUIC-TLS: RFC9001
+  EXPLICIT-MEASUREMENTS: I-D.ietf-ippm-explicit-flow-measurements
 
 informative:
-  GREASE: I-D.ietf-tls-grease
-  DATAGRAM: I-D.pauly-quic-datagram
+  DATAGRAM: RFC9221
   LOSSBITS: I-D.ferrieuxhamchaoui-tsvwg-lossbits
 
 --- abstract
@@ -74,7 +73,7 @@ packet loss by passive on-path observation. Additionally, the lossy segment
 moving the passive observer around.
 
 With QUIC, the equivalent transport headers are encrypted and passive packet
-loss observation is not possible, as described in {{TRANSPORT-ENCRYPT}}.
+loss observation is not possible, as described in {{!RFC9065}}.
 
 Measuring TCP loss between similar endpoints cannot be relied upon to
 evaluate QUIC loss. QUIC could be routed by the network differently and
@@ -360,7 +359,7 @@ Accurate loss reporting signal is not critical for the operation QUIC protocol,
 though its presence in a sufficient number of connections is important for the
 operation of networks.
 
-The loss bits are amenable to "greasing" described in {{GREASE}} and MUST be
+The loss bits are amenable to "greasing" described in {{!RFC8701}} and MUST be
 greased.  The greasing should be accomplished similarly to the Latency Spin bit
 greasing in {{QUIC-TRANSPORT}}.  Namely, implementations MUST NOT include
 loss_bits transport parameter for a random selection of at least one in every 16
