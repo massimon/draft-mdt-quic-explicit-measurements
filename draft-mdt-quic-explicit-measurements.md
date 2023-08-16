@@ -36,6 +36,12 @@ author:
     name: Igor Lubashev
     org: Akamai Technologies
     email: ilubashe@akamai.com
+  -
+    ins: G. Fioccola
+    role: editor
+    name: Giuseppe Fioccola
+    org: Huawei Technologies
+    email: giuseppe.fioccola@huawei.com
 
 normative:
   QUIC-TRANSPORT: RFC9000
