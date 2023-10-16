@@ -91,7 +91,7 @@ transport-layer connections is not easy because packet identification and
 marking by network nodes is prevented when QUIC encrypted transport-layer header
 is being used.
 
-This document defined an extension to the QUIC protocol to enable packet loss
+This document defines an extension to the QUIC protocol to enable packet loss
 measurements using Explicit Host-to-Network Flow Measurement Techniques defined
 in {{EXPLICIT-MEASUREMENTS}}.
 
@@ -407,7 +407,7 @@ signal should not be used for automated control of the network.
 In the absence of packet loss, the Q bit signal does not provide any information
 that cannot be observed by simply counting packets transiting a network
 path. The L bit signal discloses internal state of the protocol's loss detection
-machinery, but this state can often be gleamed by timing packets and observing
+machinery, but this state can often be gleaned by timing packets and observing
 congestion controller response. Hence, loss bits do not provide a viable new
 mechanism to attack QUIC data integrity and secrecy.
 
