@@ -477,5 +477,5 @@ TBD
 
 # Acknowledgments
 
-The following people directly contributed key ideas that shaped this draft: 
+The following people directly contributed key ideas that shaped this draft:
 Kazuho Oku, Christian Huitema.
