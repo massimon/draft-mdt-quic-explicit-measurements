@@ -72,12 +72,10 @@ Proactively detecting, measuring, and locating it is crucial to maintaining high
 QoS and timely resolution of crippling end-to-end throughput issues. To this
 effect, in a TCP-dominated world, network operators have been heavily relying on
 information present in the clear in TCP headers: sequence and acknowledgment
-numbers, and SACK when enabled.  These allow for quantitative estimation of
-packet loss by passive on-path observation. Additionally, the lossy segment
-(upstream or downstream from the observation point) can be quickly identified by
-moving the passive observer around.
+numbers, and SACKs when enabled.  These allow for quantitative estimation of
+packet loss by passive on-path observation.
 
-With QUIC, the equivalent transport headers are encrypted and passive packet
+With QUIC, the equivalent transport headers are encrypted, and passive packet
 loss observation is not possible, as described in {{!RFC9065}}.
 
 Measuring TCP loss between similar endpoints cannot be relied upon to
@@ -93,9 +91,9 @@ transport-layer connections is not easy because packet identification and
 marking by network nodes is prevented when QUIC encrypted transport-layer header
 is being used.
 
-This document aims to define Explicit Host-to-Network Flow Measurement Techniques
-in order to enable Packet Loss measurements in addition to Round-Trip Time (RTT)
-measurements, that are specifically designed for QUIC protocol.
+This document defined an extension to the QUIC protocol to enable packet loss
+measurements using Explicit Host-to-Network Flow Measurement Techniques defined
+in {{EXPLICIT-MEASUREMENTS}}.
 
 ## Notational Conventions    {#conventions}
 
@@ -128,13 +126,14 @@ The upstream and downstream loss together constitute _end-to-end loss_
 
 ## On-Path Loss Signaling in QUIC
 
-{{EXPLICIT-MEASUREMENTS}} introduces different techniques for using two explicit
-loss bits in the clear portion of QUIC v1 short headers in order to signal packet
-loss to on-path network devices. The explicit loss bits considered in this document
-are the "sQuare signal" bit (Q) and the "Loss event" bit (L) (see {{squarebit}}
-and {{lossbit}}) . This approach follows the recommendations of {{!RFC8558}} that
+{{EXPLICIT-MEASUREMENTS}} introduces several techniques for using explicit loss
+bits in the clear portion of transport protocol headers to signal packet loss to
+on-path network devices.  The explicit loss bits used in this document are the
+"sQuare signal" bit (Q) and the "Loss event" bit (L) (see {{squarebit}} and
+{{lossbit}}). This approach follows the recommendations of {{!RFC8558}} that
 recommends explicit path signals.  The current document adapts the technique
-proposed in {{LOSSBITS}} for QUIC by using reserved bits in QUIC v1 short header.
+proposed in {{LOSSBITS}} for QUIC by using reserved bits in QUIC v1 short
+header.
 
 While the exploitation of only Q can help in measuring the _upstream loss_ and
 only L can help in measuring the _end-to-end loss_, both are required to detect
@@ -143,7 +142,7 @@ and measure the other types of losses (_downstream loss_ and _observer loss_).
 ## Recommended Use of the Signals
 
 The loss signal is not designed for use in automated control of the network in
-environments where loss bits are set by untrusted hosts, Instead, the signal is
+environments where loss bits are set by untrusted hosts.  Instead, the signal is
 to be used for troubleshooting individual flows and for monitoring the network
 by aggregating information from multiple flows and raising operator alarms if
 aggregate statistics indicate a potential problem.
@@ -195,7 +194,7 @@ arbitrary values (see {{ossification}}).
 
 If the sender does not have sufficient information to make an informed decision
 about Q run length, the sender SHOULD use N=64, since this value has been
-extensively tried in large-scale field tests and yielded good results.
+extensively tested in large-scale field tests and yielded good results.
 Alternatively, the sender MAY also choose a random N for each connection,
 increasing the chances of using a Q run length that gives the best signal for
 some connections.
@@ -207,11 +206,11 @@ Destination Connection ID, if one is available.
 
 ## Setting the Loss Event Bit on Outgoing Packets {#lossbit}
 
-The Loss Event bit uses the Unreported Loss counter maintained by the QUIC protocol.
-The Unreported Loss counter is initialized to 0, and the L bit of every outgoing
-packet indicates whether the Unreported Loss counter is positive (L=1 if the
-counter is positive, and L=0 otherwise).  The value of the Unreported Loss
-counter is decremented every time a packet with L=1 is sent.
+The Loss Event bit uses the Unreported Loss counter maintained by the QUIC
+protocol.  The Unreported Loss counter is initialized to 0, and the L bit of
+every outgoing packet indicates whether the Unreported Loss counter is positive
+(L=1 if the counter is positive, and L=0 otherwise).  The value of the
+Unreported Loss counter is decremented every time a packet with L=1 is sent.
 
 The value of the Unreported Loss counter is incremented for every packet that
 the protocol declares lost, using QUIC's existing loss detection machinery. If
@@ -380,9 +379,9 @@ follows:
 
 # Ossification Considerations  {#ossification}
 
-Accurate loss reporting signal is not critical for the operation QUIC protocol,
-though its presence in a sufficient number of connections is important for the
-operation of networks.
+Accurate loss reporting signal is not critical for the operation of the QUIC
+protocol, though its presence in a sufficient number of connections is important
+for the operation of networks.
 
 The loss bits are amenable to "greasing" described in {{!RFC8701}} and MUST be
 greased.  The greasing should be accomplished similarly to the Latency Spin bit
@@ -398,11 +397,12 @@ method.  Latency spin bit signal edge can be used for the same purpose.
 
 # Security Considerations
 
-The measurements described in this document do not imply new packets injected
+The measurements described in this document do not involve new packets injected
 into the network causing potential harm to the network itself and to data
-traffic. The measurements could be harmed by an attacker altering the marking
-of the packets or injecting artificial traffic. Authentication techniques can be
-used where appropriate to guard against these traffic attacks.
+traffic. The measurements could be harmed by a malicious endpoint misreporting
+losses or an attacker injecting artificial traffic. In the environments where
+such attacks are possible and cannot be identified by on-path observers, loss
+signal should not be used for automated control of the network.
 
 In the absence of packet loss, the Q bit signal does not provide any information
 that cannot be observed by simply counting packets transiting a network
